@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YT Hybrid Fleet Command Center — Promote Winners, Kill Losers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #090d16; color: #f1f5f9; font-family: Inter, system-ui, sans-serif; }
+    .card { background: #111827; border: 1px solid #1e293b; border-radius: 0.75rem; }
+    .badge-promote { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-hold { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-kill { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+  </style>
+</head>
+<body class="p-6 max-w-7xl mx-auto space-y-6">
+  <!-- Header -->
+  <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">AGY FLEET ENGINE v2.6</span>
+        <span class="text-xs text-slate-400">Argon 4 High + Google Flow Omni 1.1 Flash / Veo 3.1</span>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight mt-1">YouTube Mass-Production & Evolutionary Command Center</h1>
+      <p class="text-sm text-slate-400">Automated Telemetry Gate: <span class="text-emerald-400 font-medium">Promote Winners (Sw &ge; 75)</span> &bull; <span class="text-amber-400 font-medium">Probation (45–74)</span> &bull; <span class="text-rose-400 font-medium">Kill Losers (Sw &lt; 45)</span></p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="exportPayloads()" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold transition">Export winner_brief.json &amp; negative_constraints.json</button>
+    </div>
+  </header>
+
+  <!-- KPI Summary Row -->
+  <section class="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div class="card p-4">
+      <div class="text-xs text-slate-400 uppercase">Weekly Fleet Views</div>
+      <div class="text-2xl font-bold mt-1">4,820,400</div>
+      <div class="text-xs text-emerald-400 mt-1">+31.4% vs 7d avg</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-xs text-slate-400 uppercase">Gross AdSense Revenue</div>
+      <div class="text-2xl font-bold mt-1 text-emerald-400">$28,940</div>
+      <div class="text-xs text-slate-400 mt-1">Blended RPM: $15.82</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-xs text-slate-400 uppercase">Flow + API Compute Spend</div>
+      <div class="text-2xl font-bold mt-1 text-sky-400">$1,420</div>
+      <div class="text-xs text-slate-400 mt-1">Net AI ROI: 1,938%</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-xs text-slate-400 uppercase">Avg Critique Gate Score</div>
+      <div class="text-2xl font-bold mt-1 text-indigo-400">93.4 / 100</div>
+      <div class="text-xs text-slate-400 mt-1">Argon 4 High Auto-QA</div>
+    </div>
+    <div class="card p-4">
+      <div class="text-xs text-slate-400 uppercase">Fleet Action Split</div>
+      <div class="text-sm font-semibold mt-2 flex items-center gap-2">
+        <span class="px-2 py-0.5 rounded badge-promote">4 Promote</span>
+        <span class="px-2 py-0.5 rounded badge-hold">2 Hold</span>
+        <span class="px-2 py-0.5 rounded badge-kill">2 Kill</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Controls -->
+  <section class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-2">
+      <button onclick="renderTable('ALL')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold">All Channels &amp; Templates (8)</button>
+      <button onclick="renderTable('PROMOTE')" class="px-3 py-1.5 rounded-lg badge-promote text-xs font-semibold">Promote Winners (Sw &ge; 75)</button>
+      <button onclick="renderTable('HOLD')" class="px-3 py-1.5 rounded-lg badge-hold text-xs font-semibold">Optimize / Probation (45–74)</button>
+      <button onclick="renderTable('KILL')" class="px-3 py-1.5 rounded-lg badge-kill text-xs font-semibold">Kill Losers (Sw &lt; 45)</button>
+    </div>
+    <div id="statusToast" class="text-xs text-indigo-300 font-mono"></div>
+  </section>
+
+  <!-- Main Fleet Table -->
+  <section class="card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-900/90 text-xs uppercase text-slate-400 border-b border-slate-800">
+          <tr>
+            <th class="p-3.5">Channel &amp; Niche</th>
+            <th class="p-3.5">Assigned Template &amp; Benchmark</th>
+            <th class="p-3.5">Shorts VVSA</th>
+            <th class="p-3.5">Bridge CTR</th>
+            <th class="p-3.5">0:30 Ret</th>
+            <th class="p-3.5">Net RPM</th>
+            <th class="p-3.5">Critique QA</th>
+            <th class="p-3.5">Score (Sw)</th>
+            <th class="p-3.5">Evolution Decision &amp; Automated Action</th>
+          </tr>
+        </thead>
+        <tbody id="fleetBody" class="divide-y divide-slate-800/80"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    const fleetData = [
+      { id: "CH-01", name: "SubZero Forensics", niche: "Engineering Disasters", template: "T-01 3D Isometric Forensics", bench: "Fern / Imperial", vvsa: "81.4%", bridge: "5.4%", ret30: "76.2%", rpm: "$15.20", qa: 95, sw: 88, tier: "PROMOTE", action: "2x Flow Veo 3.1 Quality Budget + Spawn 3 Sequels" },
+      { id: "CH-05", name: "Alpha Autopsy", niche: "Corporate Collapses", template: "T-12 Noir Corporate Cinema", bench: "MagnatesMedia / ColdFusion", vvsa: "78.9%", bridge: "5.1%", ret30: "74.8%", rpm: "$22.40", qa: 94, sw: 85, tier: "PROMOTE", action: "Scale to 2 Long + 8 Shorts/wk; Clone hook syntax" },
+      { id: "CH-06", name: "Yield Matrix", niche: "Institutional Finance", template: "T-13 Sardonic Wealth Charts", bench: "How Money Works / Patrick Boyle", vvsa: "76.1%", bridge: "4.8%", ret30: "73.0%", rpm: "$25.10", qa: 96, sw: 82, tier: "PROMOTE", action: "Promote Winner; Lock Nano Banana Chart Ingredients" },
+      { id: "CH-07", name: "Silicon Pulse", niche: "AI & Hardware Breakdowns", template: "T-23 100s Hyper-Dense Code/AI", bench: "Fireship / Branch Education", vvsa: "79.5%", bridge: "4.6%", ret30: "71.9%", rpm: "$17.10", qa: 92, sw: 77, tier: "PROMOTE", action: "Promote Winner; Expand semiconductor cutaway series" },
+      { id: "CH-02", name: "Orbit & Atom", niche: "Cosmic Science & Paradox", template: "T-06 Cosmic Flat-Vector", bench: "Kurzgesagt", vvsa: "71.2%", bridge: "3.4%", ret30: "68.1%", rpm: "$11.90", qa: 90, sw: 64, tier: "HOLD", action: "Auto-Swap Thumbnail Variant B + Sharpen 0:36 Bridge" },
+      { id: "CH-03", name: "Shadow Ledger", niche: "Geopolitics & Choke Points", template: "T-11 3D Map Flyover", bench: "RealLifeLore / Vox", vvsa: "68.4%", bridge: "2.9%", ret30: "65.0%", rpm: "$18.00", qa: 89, sw: 58, tier: "HOLD", action: "Probation Run 2/3: Test T-21 Tactical Map Hybrid" },
+      { id: "CH-04", name: "Nocturne Archives", niche: "Internet Mysteries", template: "T-17 Cold-Case Doc", bench: "Lemmino / Nexpo", vvsa: "54.2%", bridge: "1.4%", ret30: "48.5%", rpm: "$8.20", qa: 86, sw: 38, tier: "KILL", action: "KILL TEMPLATE T-17 on CH-04 -> Hot-Swap to T-20 Why Files Format" },
+      { id: "CH-08", name: "BioHack Mechanics", niche: "Generic Wellness Tips", template: "T-27 2D Whiteboard", bench: "Improvement Pill", vvsa: "51.0%", bridge: "1.1%", ret30: "44.2%", rpm: "$6.90", qa: 85, sw: 31, tier: "KILL", action: "KILL LOSER: Deprecate angle -> Pivot CH-08 to T-03 3D Bio-Sim" }
+    ];
+
+    function renderTable(filter) {
+      const tbody = document.getElementById("fleetBody");
+      tbody.innerHTML = "";
+      fleetData
+        .filter(r => filter === "ALL" || r.tier === filter)
+        .forEach(row => {
+          const badgeClass = row.tier === "PROMOTE" ? "badge-promote" : row.tier === "HOLD" ? "badge-hold" : "badge-kill";
+          const tr = document.createElement("tr");
+          tr.className = "hover:bg-slate-800/40 transition";
+          tr.innerHTML = `
+            <td class="p-3.5"><div class="font-semibold text-white">${row.id}: ${row.name}</div><div class="text-xs text-slate-400">${row.niche}</div></td>
+            <td class="p-3.5"><div class="font-medium text-indigo-300">${row.template}</div><div class="text-xs text-slate-400">Clone: ${row.bench}</div></td>
+            <td class="p-3.5 font-mono">${row.vvsa}</td>
+            <td class="p-3.5 font-mono">${row.bridge}</td>
+            <td class="p-3.5 font-mono">${row.ret30}</td>
+            <td class="p-3.5 font-mono text-emerald-400">${row.rpm}</td>
+            <td class="p-3.5 font-mono">${row.qa}/100</td>
+            <td class="p-3.5 font-bold font-mono text-base">${row.sw}</td>
+            <td class="p-3.5"><span class="px-2 py-0.5 text-xs font-semibold rounded ${badgeClass}">${row.tier}</span><div class="text-xs text-slate-300 mt-1">${row.action}</div></td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function exportPayloads() {
+      const winners = fleetData.filter(d => d.tier === "PROMOTE");
+      const losers = fleetData.filter(d => d.tier === "KILL");
+      document.getElementById("statusToast").textContent =
+        `Exported ${winners.length} winners to winner_brief.json & ${losers.length} killed templates to negative_constraints.json`;
+    }
+
+    renderTable("ALL");
+  </script>
+</body>
+</html>
